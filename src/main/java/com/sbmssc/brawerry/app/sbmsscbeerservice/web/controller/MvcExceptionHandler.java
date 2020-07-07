@@ -23,9 +23,3 @@ public class MvcExceptionHandler {
         return new ResponseEntity<>(errorList, HttpStatus.BAD_REQUEST);
     }
 }
-//    @ExceptionHandler(BindException.class)
-//    public ResponseEntity<List> validationErrorHandler(BindException ex) {
-//        List<String> errors = new ArrayList<>();
-//        errors.add(ex.getMessage());
-//        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-//    }
