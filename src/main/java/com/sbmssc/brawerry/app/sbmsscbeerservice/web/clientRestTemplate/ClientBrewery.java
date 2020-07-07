@@ -14,9 +14,10 @@ public class ClientBrewery {
     public final String BEER_PATH_V1="/app/v1/beer";
 
    private RestTemplate restTemplate;
-    private  String apihost;
+    private   String apihost;
 
     public ClientBrewery() {
+
     }
 
     public ClientBrewery(String apihost) {
