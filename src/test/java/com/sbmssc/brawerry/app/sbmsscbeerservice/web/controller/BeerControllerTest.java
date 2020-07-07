@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,12 +29,18 @@ private BeerDto validBeerDto;
 
 
     public BeerControllerTest() {
-        this.validBeerDto = validBeerDto=BeerDto.builder()
-                .beerName("Meloti")
-                .beerStyleEnum(BeerStyleEnum.WHEAT)
-                .build();
-    }
 
+    }
+public BeerDto getValidBeerDto(){
+    return BeerDto.builder()
+
+            .beerName("Meloti")
+            .beerStyleEnum(BeerStyleEnum.WHEAT)
+            .price(new BigDecimal(4.99))
+            .upc(2341142424L)
+            .quantityOnHand(200)
+            .build();
+}
     @BeforeEach
     void setUp() {
 
@@ -48,7 +55,7 @@ private BeerDto validBeerDto;
 
     @Test
     void saveNewBeer() throws  Exception {
-        BeerDto beerDto= validBeerDto;
+        BeerDto beerDto= getValidBeerDto();
 
 //                BeerDto.builder().build();
         String beerJSON=objectMapper.writeValueAsString(beerDto);
@@ -60,7 +67,7 @@ private BeerDto validBeerDto;
 
     @Test
     void updateBeerById() throws Exception{
-        BeerDto beerDto= validBeerDto;
+        BeerDto beerDto= getValidBeerDto();
         String beerJSON=objectMapper.writeValueAsString(beerDto);
 
         mockMvc.perform(put("/api/v1/beer/"+UUID.randomUUID())
