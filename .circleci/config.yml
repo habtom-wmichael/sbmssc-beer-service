@@ -1,34 +1,72 @@
-version: 2 # use CircleCI 2.0
-jobs: # a collection of steps
-  build: # runs not using Workflows must have a `build` job as entry point
+version: 2.1
 
-    working_directory: ~/circleci-demo-java-spring # directory where steps will run
-
-    docker: # run the steps with Docker
-      - image: circleci/openjdk:11-browsers-legacy # ...with this image as the primary container; this is where all `steps` will run
-
-    steps: # a collection of executable commands
-
-      - checkout # check out source code to working directory
-
-      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
-
-      - run: mvn dependency:go-offline # gets the project dependencies
-
-      - save_cache: # saves the project dependencies
+commands:
+  restore_cache_cmd:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            - v1-dependencies-
+  save_cache_cmd:
+    steps:
+      - save_cache:
           paths:
             - ~/.m2
-          key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+  test:
+    steps:
+      - checkout
+      - restore_cache_cmd
+      - run: ./mvnw test
+      - save_cache_cmd
+  build:
+    steps:
+      - checkout
+      - restore_cache_cmd
+      - run: ./mvnw -Dmaven.test.skip=true package
+      - save_cache_cmd
 
-      - run: mvn package # run the actual tests
+executors:
+  docker-executor:
+    docker:
+      - image: circleci/openjdk:9.0.4-12
+  machine-executor:
+    machine:
+      image: ubuntu-1604:201903-01
 
-      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
-          # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: target/surefire-reports
+jobs:
+  test-with-docker:
+    executor: docker-executor
+    steps:
+      - test
 
-      - store_artifacts: # store the uberjar as an artifact
-          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
-      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
+  build-with-docker:
+    executor: docker-executor
+    steps:
+      - build
+
+  test-with-machine:
+    executor: machine-executor
+    steps:
+      - test
+
+  build-with-machine:
+    executor: machine-executor
+    steps:
+      - build
+
+
+workflows:
+  build-then-test-with-docker:
+    jobs:
+      - build-with-docker
+      - test-with-docker:
+          requires:
+            - build-with-docker
+
+  build-then-test-with-machine:
+    jobs:
+      - build-with-machine
+      - test-with-machine:
+          requires:
+            - build-with-machine
