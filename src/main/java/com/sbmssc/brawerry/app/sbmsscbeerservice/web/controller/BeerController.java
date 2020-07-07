@@ -19,7 +19,7 @@ import java.util.UUID;
 public class BeerController {
 
     @GetMapping("/{beerId}")
-    public ResponseEntity<BeerDto> getBeerById(@NotNull @PathVariable("beerId") UUID beerId) {
+    public ResponseEntity<BeerDto> getBeerById(@PathVariable("beerId") UUID beerId) {
         //do impl
         return new ResponseEntity<>(BeerDto.builder().build(), HttpStatus.OK);
     }
@@ -42,14 +42,14 @@ public class BeerController {
     }
 
     //handiling the the validation error using error handler
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<List> validationErrorHandler( ConstraintViolationException e) {
-
-        List<String> errors=new ArrayList<>(e.getConstraintViolations().size());
-
-        e.getConstraintViolations().forEach(constraintViolation -> {
-            errors.add(constraintViolation.getPropertyPath()+" : "+constraintViolation.getMessage());
-        });
-        return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    public ResponseEntity<List> validationErrorHandler( ConstraintViolationException e) {
+//
+//        List<String> errors=new ArrayList<>(e.getConstraintViolations().size());
+//
+//        e.getConstraintViolations().forEach(constraintViolation -> {
+//            errors.add(constraintViolation.getPropertyPath()+" : "+constraintViolation.getMessage());
+//        });
+//        return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
+//    }
 }

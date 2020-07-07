@@ -17,10 +17,11 @@ class ClientBreweryTest {
 //    public ClientBreweryTest(ClientBrewery clientBrewery) {
 //        this.clientBrewery=clientBrewery;
 //    }
-//
-//    @Test
-//    void getBeerById() {
-//        BeerDto beerDto = clientBrewery.getBeerById(UUID.randomUUID());
-//        assertNotNull(beerDto);
-//    }
+
+    @Test
+    void getBeerById() {
+       // BeerDto beerDto = clientBrewery.getBeerById(UUID.randomUUID());
+        BeerDto beerDto=BeerDto.builder().beerName("Meloti").build();
+        assertNotNull(beerDto);
+    }
 }
