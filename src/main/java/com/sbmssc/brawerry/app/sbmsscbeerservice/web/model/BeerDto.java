@@ -1,5 +1,6 @@
 package com.sbmssc.brawerry.app.sbmsscbeerservice.web.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class BeerDto {
 
     @Null
@@ -25,17 +27,21 @@ public class BeerDto {
     @Null
     private Integer version;
     @Null
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss2", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime createdDate;
     @Null
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss2", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime lastModified;
     @NotBlank
-    @Size(min=3, max = 100)
+    @Size(min = 3, max = 100)
     private String beerName;
-   @NotNull
+    @NotNull
     private BeerStyleEnum beerStyleEnum;
     @Positive
     @NotNull
     private Long upc;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @NotNull
     @Positive
     private BigDecimal price;

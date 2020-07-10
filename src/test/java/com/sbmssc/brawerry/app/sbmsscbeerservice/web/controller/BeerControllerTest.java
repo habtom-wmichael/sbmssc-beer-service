@@ -9,6 +9,8 @@ import com.sbmssc.brawerry.app.sbmsscbeerservice.web.model.BeerStyleEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.util.StringUtils;
+import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,13 +18,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.xml.crypto.dsig.spec.XPathFilterParameterSpec;
+import java.io.FileDescriptor;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.platform.commons.util.StringUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 
 //import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,6 +35,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -107,15 +113,16 @@ class BeerControllerTest {
                 .andExpect(status().isCreated())
                 .andDo(document("v1/beer",
                         requestFields(
-                                fieldWithPath("id").ignored(),
-                                fieldWithPath("version").ignored(),
-                                fieldWithPath("createdDate").ignored(),
-                                fieldWithPath("lastModified").ignored(),
+                                fieldWithPath("id").description("Id of Beer.").ignored(),
+
+                                fieldWithPath("version").description("version of Beer.").ignored(),
+                                fieldWithPath("createdDate").description("Date Created.").ignored(),
+                                fieldWithPath("lastModified").description("Last Date Modified.").ignored(),
                                 fieldWithPath("beerName").description("Beer Name."),
                                 fieldWithPath("beerStyleEnum").description("Beer Style."),
                                 fieldWithPath("upc").description("UPC of Beer."),
                                 fieldWithPath("price").description("Price of Beer."),
-                                fieldWithPath("quantityOnHand").ignored()
+                                fieldWithPath("quantityOnHand").description("Quantity of Beer Avialable on Hand.").ignored()
                         )));
     }
 
@@ -133,4 +140,17 @@ class BeerControllerTest {
     @Test
     void deleteBeerById() {
     }
+
+//    private static  class ConstraintFields{
+//        private final ConstraintDescriptions constraintDescriptions;
+//
+//        ConstraintFields(Class<?> input){
+//            this.constraintDescriptions= new ConstraintDescriptions(input);
+//        }
+//        private FileDescriptor withPath( String path){
+//        return     fieldWithPath(path).attributes(key("constraints").value(StringUtils.collectionToDelimetedString(this.constraintDescriptions.descriptionsForProperty(
+//                    path),".")));
+//        }
+//
+//    }
 }
