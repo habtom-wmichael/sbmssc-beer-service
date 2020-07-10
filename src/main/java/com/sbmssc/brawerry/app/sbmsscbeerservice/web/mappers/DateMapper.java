@@ -1,4 +1,4 @@
-package com.sbmssc.brawerry.app.sbmsscbeerservice.web.mapper;
+package com.sbmssc.brawerry.app.sbmsscbeerservice.web.mappers;
 
 import org.springframework.stereotype.Component;
 
